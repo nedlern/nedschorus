@@ -58,7 +58,7 @@ Three committed homes plus the shared place — no `docs/working/` ever exists:
 | This plan | The founding pair's workflow document. |
 | [fast-handoff-design.md](fast-handoff-design.md) | Specification, d-review in progress. |
 | [fast-pr-to-prod-design.md](fast-pr-to-prod-design.md) | Specification, d-review in progress. |
-| [comms-bridge-spec.md](comms-bridge-spec.md) | Stalest document — awaits re-derivation against the throat and the Monitor rider; its six ruled requirement inputs are recorded at its head (2026-07-21). |
+| [comms-bridge-spec.md](comms-bridge-spec.md) | Specification, re-derived 2026-07-21 (both channels, six ruled inputs honored); awaiting the boss's read and the package review. |
 | [boot-pack-manifest.md](boot-pack-manifest.md) | Artifact list; rows superseded by the specs are historical. |
 | [seed-claude-md-draft.md](seed-claude-md-draft.md) | Pre-calibration input to step 2, not the base. |
 | [handoff-lite-skill-draft.md](handoff-lite-skill-draft.md) | Superseded by fast-handoff-design.md; kept as record. |
@@ -69,7 +69,7 @@ Three committed homes plus the shared place — no `docs/working/` ever exists:
 1. Entry-checkpoint-as-throat-check: the full statement awaits his approve (no import can land unmanifested; the manifest cannot lag the system). The checkpoint's mechanical shape is already ruled (2026-07-21): imports run through the executable import command, which writes the manifest line itself.
 2. Commit this founding conversation's denoised transcripts (this session + predecessor) to `docs/cross-project/` — the founding decisions currently live only in unbacked `~/.claude` JSONLs.
 3. Step 5's dissolution into the kernel + founding handoff.
-4. The bridge spec's re-derivation (before its review, not after). Its six requirement inputs are ruled and recorded at the spec's head (2026-07-21, including the companion-era shared-location fix); the re-derivation itself remains.
+4. The bridge spec's re-derivation is DONE (2026-07-21, all six ruled inputs honored; the spec now covers both channels — founding bridge and companion-era mini-comms with the shared-directory fix). Awaiting the boss's read; its two open questions (ceremony-time log snapshots; the Monitor idle-wake rider) moved into the spec's own Open section. The package review (nedschorus#8) is no longer gated on it.
 5. Which artifact classes are gated (review-before-promotion) from day one.
 6. The global `~/.claude/CLAUDE.md` edit before first boot (it currently points every session at the OLD system's kernel — measured).
 7. Wiki-walk scheduling (step 3) and first boot-test timing.

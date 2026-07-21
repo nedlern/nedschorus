@@ -1,25 +1,34 @@
 ---
-status: draft
+status: specification (re-derived 2026-07-21)
 ---
 
-# Comms Bridge Spec — two log files between the old and new systems
+# Comms Bridge Spec — append-only log-pair channels
 
-**The boss's design, adopted verbatim (2026-07-20):** the simplest thing that works — no daemons, no delivery lifecycle, no wake problem, fully inspectable.
+**The boss's design, adopted verbatim (2026-07-20), re-derived 2026-07-21 against the six ruled inputs (dispositions on https://github.com/nedschorus/nedschorus/issues/5).** The requirement: asynchronous, boss-readable coordination between two agents that survives either side's death. The simplest thing that satisfies it: two append-only files — no daemons, no delivery lifecycle, no wake problem, fully inspectable with `cat`.
 
-**Re-derivation inputs (ruled 2026-07-21, borrowings walk item 5 — dispositions on https://github.com/nedschorus/nedschorus/issues/5):** this spec is owed re-derivation before its review (founding-plan open ruling). Fixed at ruling: NO comms-substrate import — no mailbox server, no event store; two single-writer append-only files remain the protocol. Six requirements for the re-derived version: (1) when the two writers live in separate clones (companion era), the logs move to ONE shared directory outside both clones — gitignored files do not propagate between clones, so two per-clone `bridge/` directories would coordinate into the void; today's old↔new usage in the single canonical checkout is unaffected. (2) Atomic appends — a reader must never observe a half-written entry. (3) Minimal fixed entry header: entry id, UTC timestamp, author, reply-to id, base SHA whenever code is referenced. (4) Durable decisions stay OUT of the logs, linked by entry id (the persistence rule below already states this). (5) When both heads draft the same artifact, blind first passes complete before either reads the other's. (6) Open question to rule at re-derivation: whether ceremony-time snapshots of the logs join the committed record — active logs stay out of git regardless.
+## The protocol (common to every channel)
 
-## Mechanism
+- **One channel = two append-only log files, one per writer.** Write only your own file; read only the other's. Never edit or delete an entry; corrections are new entries.
+- **An append is atomic:** the writer composes the complete entry first, then appends it in a single write, so a reader never observes a half-written entry.
+- **Entry header, fixed and minimal:** `## <entry-id> <UTC timestamp> <author>` on one line, where `entry-id` is the author's name plus a per-author monotonic counter (`new-vp-0041`). Optional second lines when they apply: `reply-to: <entry-id>` and `base-sha: <sha>` (required whenever the entry references repository code or a draft). Body: plain markdown. No protocol beyond that.
+- **Delivery is pull-only by design:** each side reads the other's log when it takes a turn. There is NO wake mechanism — an entry waits until the reader next runs. If something is urgent, the boss relays it by cut-and-paste, which is the always-available fallback channel.
+- **The logs are working chatter, not records — gitignored, never committed.** Anything durable gets PROMOTED out of the log into its governing home (a decision into a spec or issue; state into the handoff), linked back by `entry-id`. A log entry is presumed disposable.
+- **Blind first passes:** when both agents draft the same artifact, each completes its first pass before reading anything the other wrote about it. Cross-reading before both passes exist collapses the value of having two heads.
 
-- Two append-only files in the NEW repo: `bridge/from-old.log.md` (old system writes, new system reads) and `bridge/from-new.log.md` (new system writes, old system reads).
-- **Write only your own file; read only the other's.** Append-only — never edit or delete an entry; corrections are new entries.
-- Entry format: `## <UTC timestamp> <author-agent>` followed by the message body. Plain markdown, no protocol beyond that.
-- Delivery is pull-only by design: each side reads the other's log when it takes a turn. There is NO wake mechanism — a message waits until the reader next runs. If something is urgent, the boss relays it by cut-and-paste, which is the always-available fallback channel.
+## The two channels
 
-## Persistence rules (boss directive, 2026-07-20)
+| Channel | Writers | Files | Location |
+|---|---|---|---|
+| Founding bridge | the old system's agent ↔ choirmaster | `bridge/from-old.log.md`, `bridge/from-new.log.md` | `bridge/` in the canonical nedschorus checkout — both writers reach the same checkout today, so one directory serves. |
+| Mini-comms (companion era) | choirmaster ↔ the companion | `mini-comms/from-choirmaster.log.md`, `mini-comms/from-companion.log.md` | **One shared directory OUTSIDE both clones** (exact path fixed at companion admission, recorded in the kernel). Gitignored files do not propagate between clones — two per-clone directories would coordinate into the void, so a clone-local location is a defect, not an option. |
 
-- **The logs are `.gitignored`** — they are working chatter, not records. The new repo's `.gitignore` carries `bridge/*.log.md` from init.
-- **Anything durable gets PROMOTED out of the log** into a committed file (a decision into the charter or a doc; state into the handoff) — the heavily-used handoff process is the backup path for anything in a log worth keeping. A log entry is presumed disposable.
+The companion's **promotion requests** travel over mini-comms as ordinary entries whose body carries the fields the throat requires (`request-id`, path list, base commit, at most one declared quarry import with source SHA + source path + destination path — see `fast-pr-to-prod-design.md`). A stalled request is visible in the boss-readable log, never silent.
 
 ## Why not import postal
 
-The old system's postal stack (server, dispatcher, delivery lifecycle, wake mechanisms) is the single largest source of measured friction in the quarry — stranded rows, pull-only replies, delivered-but-unsurfaced messages, an unsolved idle-wake gap. The bridge defers ALL of it until the new system has more than one agent and has EARNED automation per the ladder. When that day comes, the postal code in the quarry is an import candidate — through the entry checkpoint, with its known defects listed.
+The old system's postal stack (server, dispatcher, delivery lifecycle, wake mechanisms) is the single largest source of measured friction in the quarry — stranded rows, pull-only replies, delivered-but-unsurfaced messages, an unsolved idle-wake gap. The bridge defers ALL of it until the new system has more than one agent pair and has EARNED automation per the ladder. If that day comes, the postal code in the quarry is an import candidate — through the entry checkpoint, with its known defects listed.
+
+## Open — awaiting the boss
+
+1. Ceremony-time snapshots: whether the handoff ceremony copies the live logs into the committed record (active logs stay out of git regardless; the boss raised capture-at-handoff-creation as the candidate).
+2. The Monitor-armed idle-wake rider (each side arming a filesystem watch to shorten pull latency) — unruled; it is automation the ladder has not admitted.

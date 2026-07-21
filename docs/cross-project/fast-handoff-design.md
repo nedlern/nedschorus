@@ -15,13 +15,13 @@ Continuity between sessions in this repo. Actors: the boss (human), the session 
 
 ## What a handoff body contains
 
-The drafting subagent's distillation of the session dialog, plus only what (a) the transcript tail misses AND (b) no durable store holds. Content routes by audience: successor → the handoff; everyone → durable stores (tasks in the task list, memories in the memory store, permanent knowledge in the wiki, tracked work in issues, behavior in skills and code — never duplicated into the handoff); the boss → `boss-review-log.md` (suggested wiki/issue/skill updates, appended as dated checkbox lines; nothing ever blocks on a log entry). The highest-value body content: correction notes — "you will likely misread X as Y; actually Z."
+The drafting subagent's distillation of the session dialog, plus only what (a) the transcript tail misses AND (b) no durable store holds. Content routes by audience: successor → the handoff; everyone → durable stores (tasks in the task list, memories in the memory store, permanent knowledge in the wiki, tracked work in issues, behavior in skills and code — never duplicated into the handoff); the boss → an issue labeled `boss-review` (suggested wiki/issue/skill updates, full-context body so each is walkable and actionable; nothing ever blocks on one). The highest-value body content: correction notes — "you will likely misread X as Y; actually Z."
 
 ## Writing a handoff (session end, boss present)
 
 1. Run `handoff.py transcript` once, producing `handoff/<NNNN>-transcript.md`. This is the session's only JSONL extraction.
 2. Spawn a fresh subagent whose only inputs are that file and the drafting instructions in the skill. It writes the draft.
-3. The session agent corrects the draft's misunderstandings (they predict the successor's), adds facts the tail misses that no store holds, prunes anything a durable store already holds, and routes suggestion-class material to `boss-review-log.md`. Never added: accomplishment summaries, discovery reprises.
+3. The session agent corrects the draft's misunderstandings (they predict the successor's), adds facts the tail misses that no store holds, prunes anything a durable store already holds, and routes suggestion-class material to `boss-review`-labeled issues. Never added: accomplishment summaries, discovery reprises. The scrub step states the open `boss-review` count, one line.
 4. The scrub, in the mode the boss names — `handoff auto` (default: the agent scrubs on its own judgment) or `handoff vet` (the boss walks the scrub first). Tasks: close the dead, rewrite the stale, carry the live. Memories: prune the stale.
 5. `handoff.py write`: validates, injects the If-already-read section, stamps, writes `handoff/<max+1>.md`, exports the surviving tasks to its own file, commits handoff + transcript (pathspec-scoped), pushes.
 

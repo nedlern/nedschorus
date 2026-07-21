@@ -28,7 +28,7 @@ nedschorus is the restart that keeps it that way: start from the simple system t
 
 Three agent lifetimes, used deliberately:
 
-- **Sustained agents** (choirmaster, the companion): live indefinitely as a chain of sessions. Continuity is the handoff system — a numbered handoff file plus the session's committed transcript, written at each session's end and read automatically at the next session's start — so a session's end costs minutes, not context.
+- **Sustained agents** (choirmaster, the companion): live indefinitely. Choirmaster lives as a chain of sessions whose continuity is the handoff system — a numbered handoff file plus the session's committed transcript, written at each session's end and read automatically at the next session's start — so a session's end costs minutes, not context. The companion's continuity is its own runtime's persistent session: Codex auto-compaction plus resume by session id — it needs no handoff system (boss-ruled 2026-07-21).
 - **Task-scoped agents**: spawned for one bounded, multi-step task (a promotion job, a dogfood run) with exactly the context that task needs; they end with the task.
 - **One-shot agents** ("kleenex"): a single call, then discarded — a zero-context drafter, a review pass, a probe. Their empty context is the point: they are the system's test instrument for zero-context readability and its guard against context contamination.
 

@@ -30,6 +30,8 @@ The drafting subagent's distillation of the session dialog, plus only what (a) t
 
 A refused `write` changes no numbered handoff; the reserved transcript stays in place and the retry reuses it (no re-extraction).
 
+**Privacy scan (boss-ruled 2026-07-21, package-review finding S1):** `write` runs a privacy-scan stage over the transcript before commit, ruled to the lightest form — initially minimal, even a no-op placeholder. The boss judges the risk low for this project: credentials are keychain-held and never appear in chat, and the residual — non-credential private conversation content landing in a public repository — is explicitly accepted. The stage exists as a named slot so teeth can be added later without redesigning the ceremony; strengthening it is a ladder rung admitted on evidence.
+
 ## Reading a handoff (session start)
 
 `read` behaves per this table — the prose in the pickup line defers to it:
@@ -80,4 +82,5 @@ T1 `write` refuses each defect class; no numbered handoff changes on refusal · 
 - Very-long-session material can predate the extracted window and every store; bounded by commit-as-you-go and the boss at the walk.
 - Staleness detection is single-clone (read stamps unpushed); revisit at companion admission.
 - A counter past 9999 breaks the width-4 padding; accepted (numeric parsing tolerates wider numbers; the pad is cosmetic).
+- Transcripts commit to a public repository behind only the minimal (possibly no-op) privacy scan; accepted by boss ruling 2026-07-21 (package-review S1). The residual class is non-credential private conversation content.
 - The old system's handoff machinery is untouched; the current role keeps its old skill until T6a.

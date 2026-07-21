@@ -12,7 +12,7 @@ nedschorus is the restart that keeps it that way: start from the simple system t
 
 1. **Re-derive from the requirement; never migrate machinery.** Ask what is needed and no more; the old system's mechanisms are reference, not inheritance.
 2. **Complexity is earned, step by step:** manual → script the human runs → automation. Each step admitted on evidence, by the human.
-3. **Behavior belongs in code wherever it can be expressed there** — testable, versionable, inert until called. Prose is for judgment only. When it is a choice between python and a prompt, python.
+3. **Behavior belongs in code wherever it can be expressed there** — testable, versionable, inert until called. Prose is for judgment only. When it is a choice between python and a prompt, python; between bash and python, python — bash only for one-liners not worth a file.
 4. **Durable artifacts are written for a zero-context reader** — an agent holding only the project instructions and the document itself — and tested by handing them to one.
 5. **One writer to main.** All check-ins flow through a single throat, where every mechanical check runs from day one.
 6. **The old system is the quarry:** read-only reference. Every import records its source commit, purpose, and date in `entry-manifest.md`, in the same commit.
@@ -33,7 +33,7 @@ nedschorus is the restart that keeps it that way: start from the simple system t
 | `docs/cross-project/` | Artifacts shared with the old system, including the founding documents. |
 | `handoff/` | Numbered session handoffs and their transcripts. |
 | `entry-manifest.md` | The ledger of everything imported from the quarry. |
-| `boss-review-log.md` | Suggested updates awaiting the boss's review. |
+| Issues labeled `boss-review` | Suggested updates awaiting the boss's review — same format as every issue, walkable, non-blocking. |
 
 ## Status
 

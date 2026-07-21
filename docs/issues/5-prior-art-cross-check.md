@@ -489,3 +489,409 @@ Confidence would rise with searches across emerging local-agent orchestration re
 4. **Make quarry import provenance executable rather than documentary.** A Python importer should perform the copy/transformation, compute source and destination digests, update a richer manifest, and run characterization checks in one operation; this eliminates the current undeclared-import and irreproducibility residual. Sources: [Google Copybara](https://github.com/google/copybara), [SLSA provenance](https://slsa.dev/spec/v1.2/provenance), [SPDX package information](https://spdx.github.io/spdx-spec/v2.3/package-information/).
 
 5. **Harden the two-log protocol while preserving independent first passes.** Establish a genuinely shared path, atomic records, IDs, base SHAs, digests, cursors, acknowledgements, and explicit synthesis decisions; then measure which task classes benefit enough to justify double execution. Sources: [Anthropic multi-agent research](https://www.anthropic.com/engineering/multi-agent-research-system), [LLM-Blender](https://aclanthology.org/2023.acl-long.792/), [Event Sourcing](https://www.martinfowler.com/eaaDev/EventSourcing.html).
+
+---
+
+# SECOND PASS — adversarial verification (same day)
+
+## Founding-context note (new-vp, 2026-07-21)
+
+Adversarial second pass by Codex gpt-5.6-sol (xhigh, web search, read-only), prompted to overturn the first pass's three Medium-confidence verdicts using the first pass's own suggested search vectors. Report admitted verbatim below. Headline: all four re-examined verdicts DOWNGRADED — P2's fresh-reader clause found in the wild (Acai); P8 is vendoring/PDS governance applied inward; P9 is emerging standard practice; P1 has established names (cold-start, no-memory baseline, context ablation). The residual novelty is the governance bundles, not the mechanisms. Shortlist re-ranked; four net-new controls found.
+
+# Adversarial second pass
+
+I read `docs/issues/5-prior-art-cross-check.md` in full before searching, then read `README.md`. I treated the first pass as the baseline and searched specifically for its declared weak points.
+
+Evidence labels:
+
+- **READ** — I fetched and inspected the linked source.
+- **INFER** — synthesis from multiple inspected sources; not an explicit source claim.
+- **UNVERIFIED** — surfaced but could not be inspected or independently confirmed.
+
+Searches were run on 2026-07-21 through the integrated web-search index, direct GitHub repository/file pages, GitHub Code Search URLs, arXiv, ACL Anthology, medRxiv, AHRQ, FAA, NASA, EASA, Mozilla, Google Open Source, and Chromium source. Unauthenticated GitHub Code Search and Semantic Scholar were intermittently unavailable; those failures are identified below.
+
+## 1. P2 — fresh transcript reader authors the handoff
+
+### Exact searches
+
+Web/GitHub index:
+
+```text
+site:github.com ".claude/agents" (handoff OR handover) transcript summarizer Claude Code
+site:github.com Claude Code "session handoff" transcript agent
+site:github.com ("context handoff" OR "handoff agent") (Cline OR aider OR OpenHands OR SWE-agent OR AutoGPT)
+site:github.com Claude Code plugin handoff continuity transcript summary
+site:github.com/mattpocock/skills handoff skill transcript fresh agent
+site:github.com "cs-handoff-author"
+site:github.com "handoff-author" ".claude/agents"
+site:github.com "session scribe" Claude Code transcript handoff
+site:github.com/hesreallyhim/awesome-claude-code "handoff"
+site:github.com "subagent" "transcript" "handoff.md" Claude
+site:github.com "summarizer agent" "session handoff" coding
+site:github.com "scribe agent" "session handoff" LLM
+".acai/handoffs" "handoffPrompt"
+github acai-ts commands handoff generateHandoffFilename
+site:github.com/travisennis acai handoff command
+"This handoff file can be used to continue the work using the /pickup command"
+"handoffPrompt(purpose)" coding agent
+"generateHandoffSlug" coding agent
+"detailed handoff summaries for coding agents" github
+"/pickup" ".acai/handoffs"
+"creating detailed handoff summaries for coding agents"
+"conversationText" "handoffPrompt" "generateText" handoff
+Cline Memory Bank official documentation session reset memory files workflow
+site:github.com/cline/cline "Memory Bank"
+site:docs.cline.bot memory bank context continuity
+site:github.com/GreatScottyMac/roo-code-memory-bank handoff session
+```
+
+Direct GitHub Code Search:
+
+```text
+"transcript_path" "handoff"
+"fresh agent" "handoff"
+"handoff" "SubagentStop"
+```
+
+These Code Search pages did not return inspectable results without authentication. **UNVERIFIED surface limitation**, not negative evidence.
+
+Scholarly/operational literature:
+
+```text
+"Handoff Debt" LLM agent citations related papers
+site:arxiv.org LLM agent conversation summarization continuity handoff memory transcript
+site:aclanthology.org conversation summarization long-term dialogue memory recursive summary LLM agent
+("clinical handoff" OR "aviation handover") "LLM agent" continuity
+site:ahrq.gov handoff communication I-PASS SBAR receiver synthesis readback
+site:faa.gov shift turnover handoff maintenance checklist communication
+site:pubmed.ncbi.nlm.nih.gov I-PASS handoff bundle error reduction NEJM
+scholar LLM agent handoff clinical aviation shift handover summarization
+```
+
+I also attempted a direct Semantic Scholar lookup for arXiv `2606.02875`; the response was unavailable. Exact-title searches found the paper and mirrors, but no independently verified citing papers.
+
+### Findings
+
+**READ — Acai contains the central mechanism the first pass failed to find.** A preserved Acai development session includes an implementation that serializes `messageHistory`, supplies that conversation to a separate `generateText` call whose system role is to create a detailed coding-agent handoff, and writes the generated result under `.acai/handoffs/` for later `/pickup`. That is substantively a stateless/fresh transcript reader authoring the handoff, even though it may reuse the configured model rather than launch a named subagent. [Acai session and implementation excerpt](https://gist.github.com/travisennis/77e39e0bfdc2ea5ba4b8bfaf35e98db8)
+
+Important qualification: this is a public GitHub Gist containing a session and code excerpt, not a release artifact whose repository lineage and production use I could independently verify. It therefore has lower evidentiary weight than a maintained repository, but it is direct contrary evidence against novelty of the *fresh transcript reader* clause.
+
+**READ — durable, chronological coding-agent transition corpora already exist.** The Claude Code Toolkit, now superseded by a cross-agent toolkit, persists timestamped transition documents under `.claude/transitions/`, supports `handoff`/`continue`, and describes them as cold-startable transitions that either Claude or Codex can resume. It is self-authored rather than independently drafted, but it weakens the “permanent chronological handoff corpus” part of P2. [Claude Code Toolkit](https://github.com/stefan-jansen/claude-code-toolkit)
+
+**READ — Cline Memory Bank is self-maintained continuity, not independent authorship.** It uses structured Markdown read at the beginning of fresh tasks; `/newtask` distills decisions, file changes, and progress into a clean-context task. Its own instructions explicitly say that after a reset Cline relies entirely on the Memory Bank. The outgoing/current agent remains the documenter, however. [Cline Memory Bank](https://www.mintlify.com/cline/cline/features/memory-bank)
+
+**READ — Handoff Debt establishes the right experimental comparison but not P2’s drafting protocol.** It freezes repositories at deterministic interruption points and compares repository-only, raw-trace, summary-note, and structured-note takeover. Across 181 handoff-point tasks and 724 takeover runs per successor model, context-bearing handoffs reduced median events by 20–59% and cumulative prompt tokens by 42–63%, while solved-rate effects were smaller and model-dependent. It does not assign summary authorship to a fresh reader or use sender correction as a protocol stage. [Handoff Debt](https://arxiv.org/abs/2606.02875)
+
+**READ — clinical handoff practice independently validates receiver-authored reconstruction.** AHRQ’s I-PASS ends with **Synthesis by Receiver**, and TeamSTEPPS also defines a check-back as the recipient confirming that the message was understood as the source intended. This is very close to the epistemic rationale of “fresh reader drafts; informed sender corrects”: comprehension is tested by forcing the receiver to reconstruct state, then closing the loop. [AHRQ TeamSTEPPS/I-PASS](https://www.ahrq.gov/teamstepps-program/curriculum/communication/teach/two-day.html)
+
+**READ — PAUSE-Agents is a close domain analogue.** This July 2026 medRxiv preprint routes ICU records through a scribe extractor, six role-specialized agents, conflict surfacing, deterministic safety checks, and synthesis to produce a source-attributed first draft that a clinician edits rather than an autonomous final note. In its small single-center evaluation, 98.8% of adjudicable claims were verified and 88% of briefs had no pertinent omission. It is clinical-data-to-handoff, not agent-transcript-to-handoff, and it lacks the numbered committed transcript corpus. [PAUSE-Agents](https://www.medrxiv.org/content/10.64898/2026.07.10.26357759v1)
+
+**READ — conversation-memory research supplies evaluation warnings, not the exact workflow.** RMM prospectively summarizes dialogue at utterance, turn, and session levels and refines retrieval retrospectively; LongMemEval shows that summary-based memory can lose information relative to raw observations on some question classes. [RMM](https://aclanthology.org/2025.acl-long.413/), [LongMemEval](https://aclanthology.org/2024.acl-long.747/)
+
+**UNVERIFIED — Handoff Debt citation lineage.** I found no verified paper citing Handoff Debt as of 2026-07-21. Its inspected bibliography did not expose a clinical- or aviation-handoff lineage. Given its June 2026 publication date, this absence has little inferential force.
+
+### Verdict update
+
+**DOWNGRADED — Medium-High confidence.**
+
+Reclassification: **known constituent mechanism; still-unmatched exact governance bundle**.
+
+The first pass’s strongest novelty premise—“the handoff is authored by a fresh transcript reader”—is refuted by the Acai implementation excerpt. Timestamped/durable coding-agent transition archives are also established. What remains unmatched is the complete conjunction:
+
+1. fresh reader is the mandatory first author;
+2. ending agent is restricted to correction rather than free rewriting;
+3. correction is preserved as an auditable delta;
+4. numbered handoff and denoised transcript are committed together;
+5. the sequence is treated as a permanent learning corpus.
+
+**Single strongest contrary evidence:** the [Acai handoff implementation](https://gist.github.com/travisennis/77e39e0bfdc2ea5ba4b8bfaf35e98db8).
+
+### Worth borrowing
+
+- Implement P2 explicitly as an **I-PASS-style receiver synthesis/check-back**: fresh agent drafts; predecessor marks omissions, false inferences, and priority errors; both versions and the correction diff remain available.
+- Require source anchors in every handoff claim: transcript event/turn ID, commit SHA, file path, test result, or explicit `UNSUPPORTED`.
+- Add PAUSE-style conflict surfacing: contradictory decisions, stale task states, differing SHAs, and unresolved ownership become structured warnings rather than silently reconciled prose.
+- Evaluate at least five conditions: repository-only, raw transcript, predecessor self-summary, fresh-reader draft, and fresh-reader draft plus predecessor correction.
+- Score successor task success, rediscovery events, prompt tokens, incorrect inherited assumptions, omitted blockers, and correction-diff size. Summary similarity is not a sufficient metric.
+
+## 2. P8 — frozen predecessor quarry plus entry manifest
+
+### Exact searches
+
+```text
+site:chromium.googlesource.com "README.chromium" Revision Date License Security Critical
+site:firefox-source-docs.mozilla.org vendoring moz.yaml origin revision release license tracking
+site:docs.yoctoproject.org SRCREV LIC_FILES_CHKSUM provenance recipe source revision
+site:buildroot.org manual package source version license hash provenance
+site:faa.gov DO-178C previously developed software reuse data configuration traceability
+site:easa.europa.eu DO-178C previously developed software PDS reuse records
+DO-178C section 12.1.4 previously developed software reuse objectives source code traceability configuration index
+site:nasa.gov software reuse provenance legacy code migration record
+monorepo extraction tool source commit mapping migration ledger repository split provenance
+site:github.com monorepo split "source commit" manifest migration
+large rewrite port "migration ledger" component by component source revision
+selective import legacy repository source commit manifest component migration
+Python 2 to 3 port component migration tracking document ledger repository
+GCC to LLVM migration component by component compatibility tracking source code import
+BoringSSL OpenSSL fork import upstream commit tracking README migration
+Firefox Quantum rewrite migration component tracking legacy source import
+site:android.googlesource.com METADATA third_party url version last_upgrade_date license revision
+site:opensource.google/documentation/reference/thirdparty metadata source provenance fields
+site:source.android.com third party METADATA file provenance version URL license
+Google third_party METADATA file last_upgrade_date version URL
+"frozen legacy" repository "port" component
+"read-only" legacy repository successor "import" code
+"archived repository" "selectively port" features successor
+"legacy repository" "source of truth" "port" new repository
+```
+
+### Findings
+
+**READ — Google’s third-party admission procedure is nearly the entry-checkpoint manifest.** Every package directory requires `METADATA`; normal package records include name, description, source URL, exact version, and `last_upgrade_date`. Google further requires the **first changelist** to contain the code plus `OWNERS`, `BUILD`, `LICENSE`, and `METADATA`, and requires only one new package per changelist. This is component-scoped, same-change provenance admission with an explicit date and purpose/description. [Google METADATA](https://opensource.google/documentation/reference/thirdparty/metadata), [Google code-retrieval and first-CL policy](https://opensource.google/documentation/reference/thirdparty/retrieving)
+
+**READ — Mozilla’s vendoring system is an executable provenance manifest.** Each `moz.yaml` records the source location, release, exact commit revision, description, license, optional local patches, include/exclude rules, and ordered update/post-patch transformations. `mach vendor` imports a specified revision through that manifest. This is stronger than a prose ledger because the provenance record is also the executable import recipe. [Mozilla vendoring documentation](https://firefox-source-docs.mozilla.org/mozbuild/vendor/index.html)
+
+**READ — Chromium records hard-fork status explicitly.** `README.chromium` requires source URL, exact revision for Git upstreams, update mechanism, license, shipment/security status, description, and local modifications. Valid update mechanisms include `Static.HardFork`, and automated uprev processes must update the recorded revision. [Chromium `README.chromium` template](https://chromium.googlesource.com/chromium/src/%2B/main/third_party/README.chromium.template)
+
+**READ — Mozilla also has same-patch component migration recipes.** When part of Firefox’s UI is migrated to Fluent, the migration recipe should be attached to the same patch that introduces the new strings. Recipes name source and target files and encode transformations from legacy identifiers. This is domain-limited to localization, but it demonstrates one-slice-at-a-time migration with the transformation record admitted alongside the destination change. [Mozilla Fluent migration lifecycle](https://firefox-source-docs.mozilla.org/l10n/migrations/overview.html)
+
+**READ — retaining the predecessor read-only as a quarry is established migration advice.** Atlassian’s Perforce-to-Git “start over” option imports a clean tip snapshot and recommends retaining the old Perforce server read-only so engineers can investigate historical code. It lacks P8’s per-component entry ledger but directly matches the frozen-reference half. [Atlassian Perforce-to-Git migration](https://www.atlassian.com/git/tutorials/perforce-git-migration)
+
+**READ — safety-critical reuse imposes deeper evidence than P8 currently proposes.** NASA requires reused/legacy software, associated requirements, architecture, tests, defects, maintenance history, and configuration-controlled records to be gathered and retained. FAA guidance treats reuse as reuse of approved lifecycle data and expects traceability through requirements, design, source, executable object code, tests/results, and Software Configuration Index records. EASA guidance similarly requires change-impact analysis and reverification evidence for legacy baseline upgrades. [NASA SWE-027](https://swehb.nasa.gov/spaces/7150/pages/16449873/SWE-027%2B-%2BUse%2Bof%2BCommercial%2BGovernment%2Band%2BLegacy%2BSoftware), [FAA Order 8110.49](https://www.faa.gov/documentLibrary/media/Order/FAA_Order_8110_49_w-chg_2.pdf), [EASA legacy-software guidance](https://www.easa.europa.eu/en/document-library/easy-access-rules/online-publications/easy-access-rules-acceptable-means?page=22)
+
+**READ — ecosystem provenance controls add integrity checks.** Buildroot stores hashes for downloaded sources and license files, making unexpected source or licensing changes fail validation. This is not a migration ledger, but it supplies the missing content-integrity dimension. [Buildroot manual](https://buildroot.org/downloads/manual/manual.html)
+
+**UNVERIFIED negative result — named large rewrites.** Searches for Python 2→3, GCC→LLVM, OpenSSL→BoringSSL, Firefox Quantum, and healthcare/banking rewrite ledgers did not produce a reputable public artifact combining a frozen source repository with a per-component source-commit/purpose/date admission ledger. BoringSSL’s public history explains its origin in Google’s OpenSSL patch stack, but I found no corresponding selective-import manifest. [BoringSSL README](https://boringssl.googlesource.com/boringssl.git/%2B/34b51faf3a58fe36e3ab1db99a2a441d0f69c754/README.md)
+
+### Verdict update
+
+**DOWNGRADED — High confidence.**
+
+Reclassification: **established software-admission pattern applied to an unusual source category**.
+
+P8’s controls are not genuinely novel. Google already requires one-component-per-change admission with code and provenance metadata in the same first change. Mozilla already has executable component manifests with exact revisions and transformations. Retaining a legacy system read-only for historical excavation is also established.
+
+The residual distinction is organizational: nedschorus treats its own predecessor as if it were an untrusted third-party/hard-fork source whose components must earn admission. That is a sharp doctrine, but the underlying mechanism is a direct adaptation of mature vendoring and previously-developed-software governance.
+
+**Single strongest contrary evidence:** Google’s [first-CL and one-package-per-CL policy](https://opensource.google/documentation/reference/thirdparty/retrieving), combined with its mandatory [METADATA schema](https://opensource.google/documentation/reference/thirdparty/metadata).
+
+### Worth borrowing
+
+Make the manifest both declarative and executable. Minimum record:
+
+```text
+component_id
+destination_paths
+source_repository
+source_revision
+source_paths
+source_content_digest
+admission_date
+purpose / capability supplied
+reason existing successor code is insufficient
+import_method
+include / exclude rules
+transformations and local patches
+characterization tests
+known inherited defects
+license / security status
+owner
+reviewer
+```
+
+Enforce:
+
+- one component per admission change;
+- manifest, imported code, tests, and transformation recipe in the same commit;
+- exact revision, never branch name;
+- digest verification;
+- explicit `static-hard-fork`/`no-upstream-sync` status;
+- CI rejection when imported paths lack a manifest or the manifest revision/digest disagrees with the content.
+
+## 3. P9 — heterogeneous dual agents, isolated workspaces, logs, synthesis
+
+### Exact searches
+
+```text
+GitHub multi CLI coding agent coordinator Claude Code Codex tmux worktree filesystem mailbox
+site:github.com Claude Codex "agent inbox" "outbox" coding
+site:github.com multi-agent coding tmux worktree append-only log mailbox
+site:github.com Claude Code Codex same task parallel synthesis separate worktrees
+site:github.com LLM agent filesystem mailbox worktree tmux agent mail coding
+site:github.com multi-agent coding append-only JSONL mailbox worktrees Claude Codex
+site:github.com blackboard architecture LLM multi agent shared memory message board
+site:github.com mcp-agent-mail agents mailbox git worktree
+blackboard architecture multi-agent systems Hayes-Roth 1985 PDF
+LLM multi-agent blackboard architecture paper shared blackboard 2024 2025
+"ESAA-Conversational" citations follow-up
+arXiv 2606.23752 ESAA-Conversational code repository
+"ESAA-Conversational: An Event-Sourced Memory Layer" -arxiv
+"2606.23752" citations
+"Event-Sourcing Agent Architecture" ESAA GitHub
+site:github.com "activity.jsonl" "handoff.md" "ESAA"
+```
+
+### Findings
+
+**READ — Crystal directly implements the core dual-runtime experiment.** Crystal is a completed desktop application for managing Claude Code and Codex instances against one project using isolated Git worktrees. Its project documentation explicitly says it runs parallel assistant sessions with different approaches to the same problem, persists sessions in SQLite, visualizes diffs, and supports squash/rebase integration. Worktrees are not literally independent clones, but they provide the intended source-tree isolation. [Crystal](https://github.com/stravu/crystal/blob/main/CLAUDE.md)
+
+**READ — dmux makes heterogeneous worktree parallelism routine.** One prompt can launch a selected combination of Claude Code, Codex, Gemini, Cline, and other CLIs; each task/agent receives a separate tmux pane, worktree, and branch, with merge or PR integration afterward. It does not prescribe mutual communication or single-writer synthesis. [dmux](https://github.com/standardagents/dmux)
+
+**READ — heterogeneous analysis/consolidation/review pipelines already exist.** The `claude-codex` plugin runs parallel Claude analyses, has an orchestrator consolidate their outputs, and uses Codex as a validation/review gate before implementation. It lacks separate clones and bidirectional append-only logs, but it covers heterogeneous models, independent analysis, controlled consolidation, and a designated integration path. [claude-codex](https://github.com/Z-M-Huang/claude-codex)
+
+**READ — filesystem-backed agent mail is substantially more developed than two directional log files.** MCP Agent Mail supports Claude, Codex, Gemini, and other coding agents with identities, inbox/outbox semantics, threaded messages, acknowledgements, advisory file leases, Git-backed human-auditable artifacts, and SQLite indexing. Its canonical messages are durable records rather than two unstructured transcript files. [MCP Agent Mail](https://github.com/Dicklesworthstone/mcp_agent_mail)
+
+**READ — ESAA-Conversational nearly subsumes the log substrate.** It normalizes heterogeneous agents’ native logs into append-only `activity.jsonl`, then deterministically projects `handoff.md`, `state.md`, `decisions.md`, and `tasks.json`. It includes workspace isolation and a write-path lockfile. It addresses continuity rather than deliberately assigning the same task to two agents, but its event model is a stronger version of P9’s filesystem bridge. [ESAA-Conversational](https://arxiv.org/abs/2606.23752)
+
+**READ — blackboard coordination is old and has explicit LLM revivals.** Hayes-Roth’s 1985 blackboard control architecture separates shared domain state from control knowledge; a 2025 LLM implementation places role agents around a shared board, repeatedly selecting contributors until consensus. Thus “agents coordinate indirectly through a shared artifact” is canonical architecture, not a new agent pattern. [Hayes-Roth 1985](https://www.sciencedirect.com/science/article/pii/0004370285900633), [LLM blackboard system](https://arxiv.org/abs/2507.01701)
+
+**UNVERIFIED — ESAA follow-ups/citations.** Exact-title and arXiv-ID searches found the paper and indexing mirrors, but no verified follow-up or citing work. The linked GitHub repository surfaced through social/indexing results as unavailable. This does not undermine the paper’s inspected design, but I could not audit its claimed public implementation repository.
+
+**INFER — the two-file bridge is not the valuable novelty.** Two direction-specific append-only files are a minimal mailbox/event-log encoding. Crystal supplies the heterogeneous same-task/worktree topology; Agent Mail supplies the mailbox; ESAA supplies append-only normalization and projections; orchestrator pipelines supply consolidation. P9 combines known mechanisms but does not introduce a new coordination abstraction.
+
+### Verdict update
+
+**DOWNGRADED — High confidence.**
+
+Reclassification: **emerging established practice; locally distinctive minimal encoding**.
+
+The first pass’s “known-but-rare” label was reasonable at the abstract level, but current tooling shows heterogeneous coding agents in parallel worktrees becoming an ordinary supported workflow. The precise combination of *two* append-only files and a single synthesizer remains unmatched, but that is an implementation choice rather than meaningful prior-art novelty.
+
+**Single strongest contrary evidence:** [Crystal](https://github.com/stravu/crystal/blob/main/CLAUDE.md), because it explicitly supports Claude and Codex taking different approaches to the same problem in isolated worktrees.
+
+### Worth borrowing
+
+Do not merely harden two prose logs. Replace them with a minimal event envelope:
+
+```text
+event_id
+schema_version
+timestamp
+writer_identity
+runtime / model
+task_id
+workspace / branch
+base_sha
+current_sha
+event_type
+caused_by
+reply_to
+payload
+payload_digest
+ack_required
+```
+
+Then add:
+
+- atomic append or a single append service;
+- per-reader cursors and acknowledgements;
+- deterministic projections for current state, open questions, decisions, and synthesis inputs;
+- replay/verification from the immutable event stream;
+- independent first-pass outputs hidden from the other agent until both are complete;
+- a named synthesizer with sole write authority to the integration branch;
+- explicit attribution when synthesis selects, rejects, or combines agent conclusions.
+
+## 4. P1 — empty context as a test instrument
+
+### Exact searches
+
+```text
+LLM agent evaluation "no-memory baseline" context ablation
+LLM agent "cold-start" evaluation fresh context
+LLM "context isolation" evaluation agent memory
+LLM "epistemic contamination" context agent
+machine teaching teaching dimension minimal teaching set survey primary paper
+machine teaching evaluation learner from instructions document fresh learner
+LLM documentation evaluation fresh agent no context instructions test
+agent memory benchmark no-memory baseline LongMemEval MemoryAgentBench
+```
+
+### Findings
+
+**READ — “cold-start” is now an explicit controlled agent-evaluation condition.** SODA controls the number of ordinary agentic tasks preceding a safety test from zero to twenty. Across seven models, safety reportedly improves by 9–52% from depth zero to depth twenty; the authors name the zero/early-history failure mode the **cold-start safety gap**. This is direct evidence that absence of conversational history is being deliberately manipulated as an independent variable. [Cold-Start Safety Gap/SODA](https://arxiv.org/abs/2606.07867)
+
+**READ — “no-memory baseline” is explicit benchmark practice.** Microsoft’s STATE-Bench instructs evaluators to run a no-memory baseline, then plug in a memory system and compare reliability, turns, latency, and user experience across a reproducible environment. [STATE-Bench](https://opensource.microsoft.com/blog/2026/05/19/introducing-state-bench-a-benchmark-for-ai-agent-memory/)
+
+**READ — context isolation and contamination are measurable experimental variables.** DACS evaluates per-agent context isolation against flat shared context and reports wrong-agent contamination; the mechanism defines exactly which agent context is present during steering. [Dynamic Attentional Context Scoping](https://arxiv.org/abs/2604.07911)
+
+**READ — “epistemic blinding” is an adjacent, more rigorous contamination control.** It anonymizes entity identities, compares blinded and unblinded inference, and measures how much the answer depends on supplied evidence versus model priors. That addresses a limitation P1’s empty transcript cannot solve: a fresh agent still carries parametric training knowledge. [Epistemic Blinding](https://arxiv.org/abs/2604.06013)
+
+**READ — agent-memory literature routinely includes empty/no-memory controls.** MemoryAgentBench evaluates retrieval, test-time learning, long-range understanding, and selective forgetting; newer systems report explicit no-memory baselines and component ablations. [MemoryAgentBench](https://arxiv.org/abs/2507.05257), [LongMemEval-V2](https://arxiv.org/abs/2605.12493)
+
+**READ/INFER — machine teaching gives the theoretical analogy, not the operational name.** Teaching dimension is the minimum teaching set needed for a specified learner to identify a target concept. Treating a repository document as a teaching set and a fresh agent as the learner is a legitimate framing, but I found no reputable source using “teaching dimension” for coding-agent documentation acceptance. [Teaching dimension for modern learners](https://arxiv.org/abs/1512.02181)
+
+There is therefore no single canonical name for P1’s full operation. The established vocabulary is:
+
+- **cold-start / zero-depth condition** — no preceding interaction;
+- **no-memory baseline** — memory mechanism absent;
+- **context ablation** — selected context removed;
+- **context isolation** — unrelated context prevented from entering;
+- **epistemic blinding** — identity/prior cues removed to measure evidence dependence.
+
+“Cold start” alone is ambiguous because systems literature also uses it for container, cache, and model startup latency.
+
+### Verdict update
+
+**DOWNGRADED — High confidence.**
+
+Reclassification: **established evaluation method; unusual documentation-acceptance application**.
+
+Empty context as a deliberate test instrument already has both names and practice. What remains uncommon is using a **document-only zero-history agent run as a repository governance gate**: the document is accepted only if a controlled fresh agent reconstructs and applies the intended system correctly.
+
+**Single strongest contrary evidence:** [SODA](https://arxiv.org/abs/2606.07867), because it experimentally controls conversational depth with zero as the deliberate baseline condition.
+
+### Worth borrowing
+
+Name the nedschorus procedure precisely: **zero-history, document-only acceptance evaluation**.
+
+Record the full context contract:
+
+```text
+model and runtime version
+system/developer instructions
+conversation depth = 0
+memory enabled/disabled
+exact supplied files and revisions
+tool/network permissions
+repository SHA
+task prompt
+random seed or repeated-run count
+termination rule
+grader and scoring rubric
+```
+
+Use a small factorial design:
+
+1. zero-history + target document only;
+2. zero-history + document + repository;
+3. no document + repository only;
+4. ordinary accumulated context;
+5. oracle context containing the intended interpretation.
+
+Repeat runs to separate document defects from sampling variance. For claims vulnerable to model priors, add blinded identifiers or synthetic names.
+
+## SHORTLIST RE-RANK
+
+1. **Remote-enforce the single-writer throat — unchanged at #1.** Nothing in this pass weakens the integrity value of making synthesis authority technically enforceable rather than conventional.
+
+2. **Run the controlled handoff experiment — unchanged at #2, but expand it.** Acai and I-PASS make fresh-reader authorship less novel, while Handoff Debt supplies a strong takeover protocol; add predecessor-correction deltas, source anchors, and conflict scoring.
+
+3. **Executable quarry provenance — move from #4 to #3.** Google and Mozilla provide mature schemas and enforcement patterns, so this can be implemented with much less design uncertainty than the first pass implied.
+
+4. **Versioned document-evaluation suite — move from #3 to #4.** It remains valuable, but the second pass shows that its core experimental method is standard no-memory/context-ablation practice rather than an unresolved research design.
+
+5. **Replace “harden the two-log bridge” with “adopt a replayable event/mail substrate.”** Two prose files should not be polished into a bespoke protocol when Agent Mail and ESAA demonstrate IDs, acknowledgements, locking, immutable events, indexing, and deterministic projections.
+
+## NET-NEW ART
+
+I found no convincing tenth founding pattern across P1–P9. I did find four significant controls the first pass missed:
+
+1. **Receiver synthesis/check-back as the governing handoff principle.** I-PASS provides a stronger justification for P2 than generic summarization literature: the recipient must demonstrate its reconstruction, and the source must close the loop.
+
+2. **Epistemic blinding.** Fresh context removes conversational contamination but not parametric prior knowledge. Anonymized entities plus blinded/unblinded comparison would make P1-style probes capable of distinguishing “learned from this document” from “already knew or guessed.”
+
+3. **Raw evidence should remain first-class because consolidation can be harmful.** A 2026 agent-memory study reports that repeatedly consolidated LLM memories can degrade below a no-memory baseline and recommends preserving raw episodes while gating consolidation. This materially supports P2’s decision to retain transcripts, but argues that denoised summaries must never replace them as the evidentiary source. [Useful Memories Become Faulty When Continuously Updated by LLMs](https://arxiv.org/abs/2605.12978)
+
+4. **Source attribution and conflict surfacing belong before synthesis.** PAUSE-Agents’ source-attributed claims, explicit conflicts, and deterministic safety flags are directly transferable to handoffs and multi-agent synthesis. The useful abstraction is not “another summarizer”; it is a draft whose claims remain traceable and whose inconsistencies are represented rather than silently resolved.
+
+Net result: none of the four exact compositions was completely overturned by a single verified predecessor, but all four first-pass novelty assessments should be narrowed. P2 retains a distinctive correction-and-corpus governance bundle; P8 is vendor-admission governance applied inward; P9 is an increasingly standard heterogeneous-worktree workflow with an unusually minimal transport; and P1 is a standard context-control experiment repurposed as documentation acceptance.

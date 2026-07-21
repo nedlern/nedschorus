@@ -1,4 +1,4 @@
-Issue: https://github.com/nedlern/nedschorus/issues/4
+Issue: https://github.com/nedschorus/nedschorus/issues/4
 
 ## Founding-context notes (new-vp review at admission, 2026-07-21)
 

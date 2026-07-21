@@ -1,4 +1,4 @@
-Issue: https://github.com/nedlern/nedschorus/issues/8
+Issue: https://github.com/nedschorus/nedschorus/issues/8
 
 # Adversarial package review — reviewer instructions
 
@@ -12,7 +12,7 @@ Additionally hunt these dimensions: unvalidated assumptions; conflation of what 
 
 ## The package (pinned)
 
-Repository `github.com/nedlern/nedschorus` at the commit named when you were launched:
+Repository `github.com/nedschorus/nedschorus` at the commit named when you were launched:
 
 - `README.md` — the charter.
 - `docs/cross-project/nedschorus-founding-plan.md` — the boot-up plan and rulings register.

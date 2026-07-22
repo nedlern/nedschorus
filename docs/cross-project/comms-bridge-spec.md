@@ -4,7 +4,7 @@ status: specification (re-derived 2026-07-21)
 
 # Comms Bridge Spec — append-only log-pair channels
 
-**The boss's design, adopted verbatim (2026-07-20), re-derived 2026-07-21 against the six ruled inputs (dispositions on https://github.com/nedschorus/nedschorus/issues/5).** The requirement: asynchronous, boss-readable coordination between two agents that survives either side's death. The simplest thing that satisfies it: two append-only files — no daemons, no delivery lifecycle, no wake problem, fully inspectable with `cat`.
+**The boss's design, adopted verbatim (2026-07-20), re-derived 2026-07-21 against the six ruled inputs (dispositions on https://github.com/nedschorus/nedschorus/issues/5).** The requirement: asynchronous, boss-readable coordination between two agents that survives either side's process or session death. The logs are ordinary files and outlive the processes that write them — that IS the survival boundary (boss-ruled 2026-07-21, package-review S4): machine loss is the backup layer's job (Time Machine; https://github.com/nedschorus/nedschorus/issues/7), and a lost log costs only re-emittable chatter (see the promotion-request paragraph). The simplest thing that satisfies it: two append-only files — no daemons, no delivery lifecycle, no wake problem, fully inspectable with `cat`.
 
 ## The protocol (common to every channel)
 
@@ -22,7 +22,7 @@ status: specification (re-derived 2026-07-21)
 | Founding bridge | the old system's agent ↔ choirmaster | `bridge/from-old.log.md`, `bridge/from-new.log.md` | `bridge/` in the canonical nedschorus checkout — both writers reach the same checkout today, so one directory serves. |
 | Mini-comms (companion era) | choirmaster ↔ the companion | `mini-comms/from-choirmaster.log.md`, `mini-comms/from-companion.log.md` | **One shared directory OUTSIDE both clones** (exact path fixed at companion admission, recorded in the kernel). Gitignored files do not propagate between clones — two per-clone directories would coordinate into the void, so a clone-local location is a defect, not an option. |
 
-The companion's **promotion requests** travel over mini-comms as ordinary entries whose body carries the fields the throat requires (`request-id`, path list, base commit, at most one declared quarry import with source SHA + source path + destination path — see `fast-pr-to-prod-design.md`). A stalled request is visible in the boss-readable log, never silent.
+The companion's **promotion requests** travel over mini-comms as ordinary entries whose body carries the fields the throat requires (`request-id`, path list, base commit, at most one declared quarry import with source SHA + source path + destination path — see `fast-pr-to-prod-design.md`). A stalled request is visible in the boss-readable log while the log lives. Log loss is cheap by construction: an undispositioned promotion request is re-emittable by its author, whose runtime session persists (the S3 companion-continuity ruling), so a lost log costs a re-send, not work. Accepted residual (boss-ruled 2026-07-21, package-review S4): the founding bridge's logs live inside the canonical checkout, so deleting that clone loses them — not a concern because the founding window is short and one boss-operated, backed-up machine holds both writers; reopening trigger: an actual log loss that costs real work.
 
 ## Why not import postal
 
@@ -30,5 +30,5 @@ The old system's postal stack (server, dispatcher, delivery lifecycle, wake mech
 
 ## Open — awaiting the boss
 
-1. Ceremony-time snapshots: whether the handoff ceremony copies the live logs into the committed record (active logs stay out of git regardless; the boss raised capture-at-handoff-creation as the candidate).
+1. Ceremony-time snapshots: whether the handoff ceremony copies the live logs into the committed record (active logs stay out of git regardless; the boss raised capture-at-handoff-creation as the candidate). Archival value only after the S4 ruling — durability no longer needs it.
 2. The Monitor-armed idle-wake rider (each side arming a filesystem watch to shorten pull latency) — unruled; it is automation the ladder has not admitted.

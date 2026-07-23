@@ -11,3 +11,5 @@ Verified from the successor's session JSONL (`135a4f6d`, first entries):
 Design fact: Claude Code turns are strictly user-initiated. A SessionStart hook injects context but cannot start a turn; the CLAUDE.md pickup line governs behavior once invoked, but nothing self-invokes. After `/clear` (or a fresh launch), the agent is dormant until a prompt arrives — the handoff-pickup automation is complete except for the first keystroke, which is still human.
 
 Use case for the idle-wake function: at session mint (post-`/clear`, post-launch), send one synthetic first prompt (the pickup phrase suffices) so the successor boots without a human keystroke. This is the boot-ceremony analog of the retired mail-cron wake.
+
+Prior art (old system): this is the known upstream idle-wake bug [anthropics/claude-code#44380](https://github.com/anthropics/claude-code/issues/44380) (OPEN, no fix) — an injected message is not processed by the idle REPL until a keystroke arrives. The old system's interim stand-in was per-session check-mail crons (currently off by boss order). See nedlern `docs/wiki/agent-runtime/session-lifecycle.md` § Mail delivery.

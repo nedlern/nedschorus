@@ -243,14 +243,21 @@ Per the walked-document-as-ledger rule (boss-approved 2026-07-22; quarry PR
 [nedlern/nedlern#2162](https://github.com/nedlern/nedlern/pull/2162)). The
 anchor after any interruption is the first unmarked item.
 
-Stack state: an INNER walk ("marking conventions and skill-creation") sits on
-top of this outer walk. Inner item 1 (marking/archive conventions) — processed
-2026-07-21/22 → folded (mark-in-place, nc-queue archive convention, pair-doc
-close lifecycle). Inner item 2 (walk-me-through: update now vs NC step-1) —
-processed 2026-07-22 → ruled NOW; landed as quarry PR
-[nedlern/nedlern#2162](https://github.com/nedlern/nedlern/pull/2162); scenario
-tests deferred to NC step-1 (see the processed mark above). Inner item 3
-(criteria-page home) — open, THE ANCHOR. After it: pop to outer item 2.
+Stack state: an INNER walk ("marking conventions and skill-creation") sat on
+top of this outer walk — now COMPLETE and popped. Inner item 1 (marking/archive
+conventions) — processed 2026-07-21/22 → folded (mark-in-place, nc-queue
+archive convention, pair-doc close lifecycle). Inner item 2 (walk-me-through:
+update now vs NC step-1) — processed 2026-07-22 → ruled NOW; landed as quarry
+PR [nedlern/nedlern#2162](https://github.com/nedlern/nedlern/pull/2162);
+scenario tests deferred to NC step-1 (see the processed mark above). Inner
+item 3 (criteria-page home) — processed 2026-07-23 → ruled: NO separate page;
+this pair's walk-behavior section IS the rulebook's home (substance here,
+state on open GHI #9), graduating only at pair close; ruled together with the
+three-state artifact rule (queue-MD needs no GHI / pending state gets a GHI /
+bare MD only for landed reference), folded to founding plan § Project
+organization and [nedschorus#13](https://github.com/nedschorus/nedschorus/issues/13).
+THE ANCHOR is now OUTER ITEM 2 (`define-work`); walk inputs: the two candidate-skill
+queue notes plus cops's delta packet when it lands.
 
 Outer walk, 17 items:
 
